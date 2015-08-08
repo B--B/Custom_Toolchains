@@ -96,7 +96,11 @@ __isl_give isl_space *isl_space_domain_product(__isl_take isl_space *left,
 	__isl_take isl_space *right);
 __isl_give isl_space *isl_space_range_product(__isl_take isl_space *left,
 	__isl_take isl_space *right);
+__isl_give isl_space *isl_space_factor_domain(__isl_take isl_space *space);
+__isl_give isl_space *isl_space_factor_range(__isl_take isl_space *space);
 __isl_give isl_space *isl_space_domain_factor_domain(
+	__isl_take isl_space *space);
+__isl_give isl_space *isl_space_domain_factor_range(
 	__isl_take isl_space *space);
 __isl_give isl_space *isl_space_range_factor_domain(
 	__isl_take isl_space *space);
@@ -150,12 +154,14 @@ int isl_space_tuple_is_equal(__isl_keep isl_space *space1,
 	enum isl_dim_type type2);
 int isl_space_match(__isl_keep isl_space *dim1, enum isl_dim_type dim1_type,
 	__isl_keep isl_space *dim2, enum isl_dim_type dim2_type);
+ISL_DEPRECATED
 int isl_space_tuple_match(__isl_keep isl_space *space1, enum isl_dim_type type1,
 	__isl_keep isl_space *space2, enum isl_dim_type type2);
 int isl_space_compatible(__isl_keep isl_space *dim1,
 	__isl_keep isl_space *dim2);
 unsigned isl_space_dim(__isl_keep isl_space *dim, enum isl_dim_type type);
 
+__isl_give char *isl_space_to_str(__isl_keep isl_space *space);
 __isl_give isl_printer *isl_printer_print_space(__isl_take isl_printer *p,
 	__isl_keep isl_space *dim);
 void isl_space_dump(__isl_keep isl_space *dim);

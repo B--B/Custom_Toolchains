@@ -99,8 +99,10 @@ differ from most arbitrary precision floating-point software tools, are:
    • the MPFR code is portable, i.e., the result of any operation does
      not depend on the machine word size ‘mp_bits_per_limb’ (64 on most
      current processors);
+
    • the precision in bits can be set _exactly_ to any valid value for
      each variable (including very small precision);
+
    • MPFR provides the four rounding modes from the IEEE 754-1985
      standard, plus away-from-zero, as well as for basic operations as
      for other mathematical functions.
@@ -488,7 +490,6 @@ File: mpfr.info,  Node: Rounding Modes,  Next: Floating-Point Values on Special 
 ==================
 
 The following five rounding modes are supported:
-
    • ‘MPFR_RNDN’: round to nearest (roundTiesToEven in IEEE 754-2008),
    • ‘MPFR_RNDZ’: round toward zero (roundTowardZero in IEEE 754-2008),
    • ‘MPFR_RNDU’: round toward plus infinity (roundTowardPositive in
@@ -703,6 +704,18 @@ the compiler and thread implementation (MPFR simply does a conventional
 variable initialization, the variables being declared with an
 implementation-defined TLS specifier).
 
+   Writers of libraries using MPFR should be aware that the application
+and/or another library used by the application may also use MPFR, so
+that changing the exponent range, the default precision, or the default
+rounding mode may have an effect on this other use of MPFR since these
+data are not duplicated (unless they are in a different thread).
+Therefore any such value changed in a library function should be
+restored before the function returns (unless the purpose of the function
+is to do such a change).  Writers of software using MPFR should also be
+careful when changing such a value if they use a library using MPFR
+(directly or indirectly), in order to make sure that such a change is
+compatible with the library.
+
 
 File: mpfr.info,  Node: MPFR Interface,  Next: API Compatibility,  Prev: MPFR Basics,  Up: Top
 
@@ -841,9 +854,12 @@ purpose.
         • You *must not* call ‘mpfr_clear’ with variables created with
           this macro (the storage is allocated at the point of
           declaration and deallocated when the brace-level is exited).
+
         • You *cannot* change their precision.
+
         • You *should not* create variables with huge precision with
           this macro.
+
         • Your compiler must support ‘Non-Constant Initializers’
           (standard in C++ and ISO C99) and ‘Token Pasting’ (standard in
           ISO C89).  If PREC is not a constant expression, your compiler
@@ -898,6 +914,10 @@ numbers.
      enough.  The precision PREC can be any integer between
      ‘MPFR_PREC_MIN’ and ‘MPFR_PREC_MAX’.  In case you want to keep the
      previous value stored in X, use ‘mpfr_prec_round’ instead.
+
+     Warning!  You must not use this function if X was initialized with
+     ‘MPFR_DECL_INIT’ or with ‘mpfr_custom_init_set’ (*note Custom
+     Interface::).
 
  -- Function: mpfr_prec_t mpfr_get_prec (mpfr_t X)
      Return the precision of X, i.e., the number of bits used to store
@@ -992,7 +1012,6 @@ Initialization Functions::).
 
  -- Function: int mpfr_strtofr (mpfr_t ROP, const char *NPTR, char
           **ENDPTR, int BASE, mpfr_rnd_t RND)
-
      Read a floating-point number from a string NPTR in base BASE,
      rounded in the direction RND; BASE must be either 0 (to detect the
      base, as described below) or a number from 2 to 62 (otherwise the
@@ -1062,10 +1081,17 @@ Initialization Functions::).
      ‘mpfr_set_nan’, the sign bit of the result is unspecified.
 
  -- Function: void mpfr_swap (mpfr_t X, mpfr_t Y)
-     Swap the values X and Y efficiently.  Warning: the precisions are
-     exchanged too; in case the precisions are different, ‘mpfr_swap’ is
-     thus not equivalent to three ‘mpfr_set’ calls using a third
-     auxiliary variable.
+     Swap the structures pointed to by X and Y.  In particular, the
+     values are exchanged without rounding (this may be different from
+     three ‘mpfr_set’ calls using a third auxiliary variable).
+
+     Warning!  Since the precisions are exchanged, this will affect
+     future assignments.  Moreover, since the significand pointers are
+     also exchanged, you must not use this function if the allocation
+     method used for X and/or Y does not permit it.  This is the case
+     when X and/or Y were declared and initialized with
+     ‘MPFR_DECL_INIT’, and possibly with ‘mpfr_custom_init_set’ (*note
+     Custom Interface::).
 
 
 File: mpfr.info,  Node: Combined Initialization and Assignment Functions,  Next: Conversion Functions,  Prev: Assignment Functions,  Up: MPFR Interface
@@ -2081,16 +2107,26 @@ File: mpfr.info,  Node: Integer and Remainder Related Functions,  Next: Rounding
  -- Function: int mpfr_ceil (mpfr_t ROP, mpfr_t OP)
  -- Function: int mpfr_floor (mpfr_t ROP, mpfr_t OP)
  -- Function: int mpfr_round (mpfr_t ROP, mpfr_t OP)
+ -- Function: int mpfr_roundeven (mpfr_t ROP, mpfr_t OP)
  -- Function: int mpfr_trunc (mpfr_t ROP, mpfr_t OP)
      Set ROP to OP rounded to an integer.  ‘mpfr_rint’ rounds to the
-     nearest representable integer in the given direction RND,
-     ‘mpfr_ceil’ rounds to the next higher or equal representable
-     integer, ‘mpfr_floor’ to the next lower or equal representable
-     integer, ‘mpfr_round’ to the nearest representable integer,
-     rounding halfway cases away from zero (as in the roundTiesToAway
-     mode of IEEE 754-2008), and ‘mpfr_trunc’ to the next representable
-     integer toward zero.  When OP is a zero or an infinity, set ROP to
-     the same value (with the same sign).
+     nearest representable integer in the given direction RND, and the
+     other five functions behave in a similar way with some fixed
+     rounding mode:
+        • ‘mpfr_ceil’: to the next higher or equal representable integer
+          (like ‘mpfr_rint’ with ‘MPFR_RNDU’);
+        • ‘mpfr_floor’ to the next lower or equal representable integer
+          (like ‘mpfr_rint’ with ‘MPFR_RNDD’);
+        • ‘mpfr_round’ to the nearest representable integer, rounding
+          halfway cases away from zero (as in the roundTiesToAway mode
+          of IEEE 754-2008);
+        • ‘mpfr_roundeven’ to the nearest representable integer,
+          rounding halfway cases with the even-rounding rule (like
+          ‘mpfr_rint’ with ‘MPFR_RNDN’);
+        • ‘mpfr_trunc’ to the next representable integer toward zero
+          (like ‘mpfr_rint’ with ‘MPFR_RNDZ’).
+     When OP is a zero or an infinity, set ROP to the same value (with
+     the same sign).
 
      The returned value is zero when the result is exact, positive when
      it is greater than the original value of OP, and negative when it
@@ -2098,42 +2134,57 @@ File: mpfr.info,  Node: Integer and Remainder Related Functions,  Next: Rounding
      integer representable in ROP, 1 or −1 when OP is an integer that is
      not representable in ROP, 2 or −2 when OP is not an integer.
 
-     Note that ‘mpfr_round’ is different from ‘mpfr_rint’ called with
-     the rounding to nearest mode (where halfway cases are rounded to an
-     even integer or significand).  Note also that no double rounding is
-     performed; for instance, 10.5 (1010.1 in binary) is rounded by
-     ‘mpfr_rint’ with rounding to nearest to 12 (1100 in binary) in
-     2-bit precision, because the two enclosing numbers representable on
-     two bits are 8 and 12, and the closest is 12.  (If one first
-     rounded to an integer, one would round 10.5 to 10 with even
-     rounding, and then 10 would be rounded to 8 again with even
-     rounding.)
+     When OP is NaN, the NaN flag is set as usual.  In the other cases,
+     the inexact flag is set when ROP differs from OP, following the ISO
+     C99 rule for the ‘rint’ function.  If you want the behavior to be
+     more like IEEE 754 / ISO TS 18661-1, i.e., the usual behavior where
+     the round-to-integer function is regarded as any other mathematical
+     function, you should use one the ‘mpfr_rint_*’ functions instead.
+
+     Note that no double rounding is performed; for instance, 10.5
+     (1010.1 in binary) is rounded by ‘mpfr_rint’ with rounding to
+     nearest to 12 (1100 in binary) in 2-bit precision, because the two
+     enclosing numbers representable on two bits are 8 and 12, and the
+     closest is 12.  (If one first rounded to an integer, one would
+     round 10.5 to 10 with even rounding, and then 10 would be rounded
+     to 8 again with even rounding.)
 
  -- Function: int mpfr_rint_ceil (mpfr_t ROP, mpfr_t OP, mpfr_rnd_t RND)
  -- Function: int mpfr_rint_floor (mpfr_t ROP, mpfr_t OP, mpfr_rnd_t
           RND)
  -- Function: int mpfr_rint_round (mpfr_t ROP, mpfr_t OP, mpfr_rnd_t
           RND)
+ -- Function: int mpfr_rint_roundeven (mpfr_t ROP, mpfr_t OP, mpfr_rnd_t
+          RND)
  -- Function: int mpfr_rint_trunc (mpfr_t ROP, mpfr_t OP, mpfr_rnd_t
           RND)
-     Set ROP to OP rounded to an integer.  ‘mpfr_rint_ceil’ rounds to
-     the next higher or equal integer, ‘mpfr_rint_floor’ to the next
-     lower or equal integer, ‘mpfr_rint_round’ to the nearest integer,
-     rounding halfway cases away from zero, and ‘mpfr_rint_trunc’ to the
-     next integer toward zero.  If the result is not representable, it
-     is rounded in the direction RND.  When OP is a zero or an infinity,
-     set ROP to the same value (with the same sign).  The returned value
-     is the ternary value associated with the considered
-     round-to-integer function (regarded in the same way as any other
-     mathematical function).  Contrary to ‘mpfr_rint’, those functions
-     do perform a double rounding: first OP is rounded to the nearest
-     integer in the direction given by the function name, then this
-     nearest integer (if not representable) is rounded in the given
-     direction RND.  For example, ‘mpfr_rint_round’ with rounding to
-     nearest and a precision of two bits rounds 6.5 to 7 (halfway cases
-     away from zero), then 7 is rounded to 8 by the round-even rule,
-     despite the fact that 6 is also representable on two bits, and is
-     closer to 6.5 than 8.
+     Set ROP to OP rounded to an integer:
+        • ‘mpfr_rint_ceil’: to the next higher or equal integer;
+        • ‘mpfr_rint_floor’: to the next lower or equal integer;
+        • ‘mpfr_rint_round’: to the nearest integer, rounding halfway
+          cases away from zero;
+        • ‘mpfr_rint_roundeven’: to the nearest integer, rounding
+          halfway cases to the nearest even integer;
+        • ‘mpfr_rint_trunc’ to the next integer toward zero.
+     If the result is not representable, it is rounded in the direction
+     RND.  When OP is a zero or an infinity, set ROP to the same value
+     (with the same sign).  The returned value is the ternary value
+     associated with the considered round-to-integer function (regarded
+     in the same way as any other mathematical function).
+
+     Contrary to ‘mpfr_rint’, those functions do perform a double
+     rounding: first OP is rounded to the nearest integer in the
+     direction given by the function name, then this nearest integer (if
+     not representable) is rounded in the given direction RND.  Thus
+     these round-to-integer functions behave more like the other
+     mathematical functions, i.e., the returned result is the correct
+     rounding of the exact result of the function in the real numbers.
+
+     For example, ‘mpfr_rint_round’ with rounding to nearest and a
+     precision of two bits rounds 6.5 to 7 (halfway cases away from
+     zero), then 7 is rounded to 8 by the round-even rule, despite the
+     fact that 6 is also representable on two bits, and is closer to 6.5
+     than 8.
 
  -- Function: int mpfr_frac (mpfr_t ROP, mpfr_t OP, mpfr_rnd_t RND)
      Set ROP to the fractional part of OP, having the same sign as OP,
@@ -2219,6 +2270,10 @@ File: mpfr.info,  Node: Rounding Related Functions,  Next: Miscellaneous Functio
             mpfr_prec_round (x, 2 * n, MPFR_RNDN); /* exact */
             mpfr_add (x, x, t, MPFR_RNDN);      /* x is correct to 2n bits */
 
+     Warning!  You must not use this function if X was initialized with
+     ‘MPFR_DECL_INIT’ or with ‘mpfr_custom_init_set’ (*note Custom
+     Interface::).
+
  -- Function: int mpfr_can_round (mpfr_t B, mpfr_exp_t ERR, mpfr_rnd_t
           RND1, mpfr_rnd_t RND2, mpfr_prec_t PREC)
      Assuming B is an approximation of an unknown number X in the
@@ -2235,8 +2290,9 @@ File: mpfr.info,  Node: Rounding Related Functions,  Next: Miscellaneous Functio
      Note: if one wants to also determine the correct *note ternary
      value:: when rounding B to precision PREC with rounding mode RND, a
      useful trick is the following:
-     if (mpfr_can_round (b, err, MPFR_RNDN, MPFR_RNDZ, prec + (rnd == MPFR_RNDN)))
-        ...
+          if (mpfr_can_round (b, err, MPFR_RNDN, MPFR_RNDZ,
+              prec + (rnd == MPFR_RNDN)))
+             ...
      Indeed, if RND is ‘MPFR_RNDN’, this will check if one can round to
      PREC+1 bits with a directed rounding: if so, one can surely round
      to nearest to PREC bits, and in addition one can determine the
@@ -2660,8 +2716,8 @@ File: mpfr.info,  Node: Compatibility with MPF,  Next: Custom Interface,  Prev: 
 A header file ‘mpf2mpfr.h’ is included in the distribution of MPFR for
 compatibility with the GNU MP class MPF.  By inserting the following two
 lines after the ‘#include <gmp.h>’ line,
-#include <mpfr.h>
-#include <mpf2mpfr.h>
+     #include <mpfr.h>
+     #include <mpf2mpfr.h>
 any program written for MPF can be compiled directly with MPFR without
 any changes (except the ‘gmp_printf’ functions will not work for
 arguments of type ‘mpfr_t’).  All operations are then performed with the
@@ -2718,10 +2774,13 @@ that such applications are able to use MPFR, an auxiliary memory
 interface has been created: the Custom Interface.
 
    The following interface allows one to use MPFR in two ways:
+
    • Either directly store a floating-point number as a ‘mpfr_t’ on the
      stack.
+
    • Either store its own representation on the stack and construct a
      new temporary ‘mpfr_t’ each time it is needed.
+
    Nothing has to be done to destroy the floating-point numbers except
 garbaging the used memory: all the memory management (allocating,
 destroying, garbaging) is left to the application.
@@ -3030,6 +3089,8 @@ macros) that were added after MPFR 2.2, and in which MPFR version.
    • ‘mpfr_regular_p’ in MPFR 3.0.
 
    • ‘mpfr_remainder’ and ‘mpfr_remquo’ in MPFR 2.3.
+
+   • ‘mpfr_rint_roundeven’ and ‘mpfr_roundeven’ in MPFR 3.2.
 
    • ‘mpfr_round_nearest_away’ in MPFR 3.2.
 
@@ -3827,7 +3888,7 @@ Concept Index
                                                                (line 22)
 * ‘stdio.h’:                             Headers and Libraries.
                                                                (line 12)
-* Ternary value:                         Rounding Modes.       (line 25)
+* Ternary value:                         Rounding Modes.       (line 24)
 * ‘uintmax_t’:                           Headers and Libraries.
                                                                (line 22)
 
@@ -3840,8 +3901,6 @@ Function and Type Index
  [index ]
 * Menu:
 
-* int:                                   Rounding Related Functions.
-                                                              (line  74)
 * mpfr_abs:                              Basic Arithmetic Functions.
                                                               (line 165)
 * mpfr_acos:                             Special Functions.   (line  61)
@@ -3876,7 +3935,7 @@ Function and Type Index
 * mpfr_buildopt_tune_case:               Miscellaneous Functions.
                                                               (line 184)
 * mpfr_can_round:                        Rounding Related Functions.
-                                                              (line  35)
+                                                              (line  39)
 * mpfr_cbrt:                             Basic Arithmetic Functions.
                                                               (line 113)
 * mpfr_ceil:                             Integer and Remainder Related Functions.
@@ -3935,13 +3994,13 @@ Function and Type Index
 * mpfr_coth:                             Special Functions.   (line 121)
 * mpfr_csc:                              Special Functions.   (line  56)
 * mpfr_csch:                             Special Functions.   (line 120)
-* mpfr_custom_get_exp:                   Custom Interface.    (line  72)
-* mpfr_custom_get_kind:                  Custom Interface.    (line  62)
-* mpfr_custom_get_significand:           Custom Interface.    (line  67)
-* mpfr_custom_get_size:                  Custom Interface.    (line  34)
-* mpfr_custom_init:                      Custom Interface.    (line  38)
-* mpfr_custom_init_set:                  Custom Interface.    (line  45)
-* mpfr_custom_move:                      Custom Interface.    (line  79)
+* mpfr_custom_get_exp:                   Custom Interface.    (line  75)
+* mpfr_custom_get_kind:                  Custom Interface.    (line  65)
+* mpfr_custom_get_significand:           Custom Interface.    (line  70)
+* mpfr_custom_get_size:                  Custom Interface.    (line  37)
+* mpfr_custom_init:                      Custom Interface.    (line  41)
+* mpfr_custom_init_set:                  Custom Interface.    (line  48)
+* mpfr_custom_move:                      Custom Interface.    (line  82)
 * MPFR_DECL_INIT:                        Initialization Functions.
                                                               (line  74)
 * mpfr_digamma:                          Special Functions.   (line 172)
@@ -4019,9 +4078,9 @@ Function and Type Index
                                                               (line   8)
 * mpfr_fma:                              Special Functions.   (line 209)
 * mpfr_fmod:                             Integer and Remainder Related Functions.
-                                                              (line  81)
+                                                              (line 106)
 * mpfr_fmodquo:                          Integer and Remainder Related Functions.
-                                                              (line  83)
+                                                              (line 108)
 * mpfr_fms:                              Special Functions.   (line 211)
 * mpfr_fpif_export:                      Input and Output Functions.
                                                               (line  43)
@@ -4030,7 +4089,7 @@ Function and Type Index
 * mpfr_fprintf:                          Formatted Output Functions.
                                                               (line 157)
 * mpfr_frac:                             Integer and Remainder Related Functions.
-                                                              (line  64)
+                                                              (line  89)
 * mpfr_free_cache:                       Special Functions.   (line 256)
 * mpfr_free_str:                         Conversion Functions.
                                                               (line 143)
@@ -4042,7 +4101,7 @@ Function and Type Index
 * mpfr_get_decimal64:                    Conversion Functions.
                                                               (line  10)
 * mpfr_get_default_prec:                 Initialization Functions.
-                                                              (line 109)
+                                                              (line 112)
 * mpfr_get_default_rounding_mode:        Rounding Related Functions.
                                                               (line  10)
 * mpfr_get_d_2exp:                       Conversion Functions.
@@ -4074,7 +4133,7 @@ Function and Type Index
 * mpfr_get_patches:                      Miscellaneous Functions.
                                                               (line 159)
 * mpfr_get_prec:                         Initialization Functions.
-                                                              (line 142)
+                                                              (line 149)
 * mpfr_get_si:                           Conversion Functions.
                                                               (line  21)
 * mpfr_get_sj:                           Conversion Functions.
@@ -4131,7 +4190,7 @@ Function and Type Index
 * mpfr_inp_str:                          Input and Output Functions.
                                                               (line  31)
 * mpfr_integer_p:                        Integer and Remainder Related Functions.
-                                                              (line 110)
+                                                              (line 135)
 * mpfr_j0:                               Special Functions.   (line 188)
 * mpfr_j1:                               Special Functions.   (line 189)
 * mpfr_jn:                               Special Functions.   (line 190)
@@ -4153,9 +4212,9 @@ Function and Type Index
 * mpfr_min:                              Miscellaneous Functions.
                                                               (line  20)
 * mpfr_min_prec:                         Rounding Related Functions.
-                                                              (line  59)
+                                                              (line  64)
 * mpfr_modf:                             Integer and Remainder Related Functions.
-                                                              (line  71)
+                                                              (line  96)
 * mpfr_mul:                              Basic Arithmetic Functions.
                                                               (line  53)
 * mpfr_mul_2exp:                         Compatibility with MPF.
@@ -4209,7 +4268,7 @@ Function and Type Index
 * mpfr_printf:                           Formatted Output Functions.
                                                               (line 164)
 * mpfr_print_rnd_mode:                   Rounding Related Functions.
-                                                              (line  69)
+                                                              (line  74)
 * mpfr_rec_sqrt:                         Basic Arithmetic Functions.
                                                               (line 105)
 * mpfr_regular_p:                        Comparison Functions.
@@ -4217,25 +4276,31 @@ Function and Type Index
 * mpfr_reldiff:                          Compatibility with MPF.
                                                               (line  39)
 * mpfr_remainder:                        Integer and Remainder Related Functions.
-                                                              (line  85)
+                                                              (line 110)
 * mpfr_remquo:                           Integer and Remainder Related Functions.
-                                                              (line  87)
+                                                              (line 112)
 * mpfr_rint:                             Integer and Remainder Related Functions.
                                                               (line   6)
 * mpfr_rint_ceil:                        Integer and Remainder Related Functions.
-                                                              (line  38)
+                                                              (line  52)
 * mpfr_rint_floor:                       Integer and Remainder Related Functions.
-                                                              (line  39)
+                                                              (line  53)
 * mpfr_rint_round:                       Integer and Remainder Related Functions.
-                                                              (line  41)
+                                                              (line  55)
+* mpfr_rint_roundeven:                   Integer and Remainder Related Functions.
+                                                              (line  57)
 * mpfr_rint_trunc:                       Integer and Remainder Related Functions.
-                                                              (line  43)
+                                                              (line  59)
 * ‘mpfr_rnd_t’:                          Nomenclature and Types.
                                                               (line  34)
 * mpfr_root:                             Basic Arithmetic Functions.
                                                               (line 114)
 * mpfr_round:                            Integer and Remainder Related Functions.
                                                               (line   9)
+* mpfr_roundeven:                        Integer and Remainder Related Functions.
+                                                              (line  10)
+* mpfr_round_nearest_away:               Rounding Related Functions.
+                                                              (line  79)
 * mpfr_sec:                              Special Functions.   (line  55)
 * mpfr_sech:                             Special Functions.   (line 119)
 * mpfr_set:                              Assignment Functions.
@@ -4247,7 +4312,7 @@ Function and Type Index
 * mpfr_set_decimal64:                    Assignment Functions.
                                                               (line  21)
 * mpfr_set_default_prec:                 Initialization Functions.
-                                                              (line  97)
+                                                              (line 100)
 * mpfr_set_default_rounding_mode:        Rounding Related Functions.
                                                               (line   6)
 * mpfr_set_divby0:                       Exception Related Functions.
@@ -4269,17 +4334,17 @@ Function and Type Index
 * mpfr_set_inexflag:                     Exception Related Functions.
                                                               (line 128)
 * mpfr_set_inf:                          Assignment Functions.
-                                                              (line 151)
+                                                              (line 150)
 * mpfr_set_ld:                           Assignment Functions.
                                                               (line  17)
 * mpfr_set_nan:                          Assignment Functions.
-                                                              (line 150)
+                                                              (line 149)
 * mpfr_set_nanflag:                      Exception Related Functions.
                                                               (line 127)
 * mpfr_set_overflow:                     Exception Related Functions.
                                                               (line 125)
 * mpfr_set_prec:                         Initialization Functions.
-                                                              (line 132)
+                                                              (line 135)
 * mpfr_set_prec_raw:                     Compatibility with MPF.
                                                               (line  22)
 * mpfr_set_q:                            Assignment Functions.
@@ -4307,7 +4372,7 @@ Function and Type Index
 * mpfr_set_z:                            Assignment Functions.
                                                               (line  23)
 * mpfr_set_zero:                         Assignment Functions.
-                                                              (line 152)
+                                                              (line 151)
 * mpfr_set_z_2exp:                       Assignment Functions.
                                                               (line  63)
 * mpfr_sgn:                              Comparison Functions.
@@ -4350,13 +4415,13 @@ Function and Type Index
                                                               (line  42)
 * mpfr_sum:                              Special Functions.   (line 264)
 * mpfr_swap:                             Assignment Functions.
-                                                              (line 158)
+                                                              (line 157)
 * ‘mpfr_t’:                              Nomenclature and Types.
                                                               (line   6)
 * mpfr_tan:                              Special Functions.   (line  41)
 * mpfr_tanh:                             Special Functions.   (line 107)
 * mpfr_trunc:                            Integer and Remainder Related Functions.
-                                                              (line  10)
+                                                              (line  11)
 * mpfr_ui_div:                           Basic Arithmetic Functions.
                                                               (line  76)
 * mpfr_ui_pow:                           Basic Arithmetic Functions.
@@ -4411,45 +4476,45 @@ Tag Table:
 Node: Top779
 Node: Copying2015
 Node: Introduction to MPFR3774
-Node: Installing MPFR5886
-Node: Reporting Bugs11330
-Node: MPFR Basics13360
-Node: Headers and Libraries13676
-Node: Nomenclature and Types16854
-Node: MPFR Variable Conventions19097
-Node: Rounding Modes20639
-Ref: ternary value21766
-Node: Floating-Point Values on Special Numbers23748
-Node: Exceptions27008
-Node: Memory Handling30836
-Node: MPFR Interface32144
-Node: Initialization Functions34272
-Node: Assignment Functions41417
-Node: Combined Initialization and Assignment Functions50781
-Node: Conversion Functions52082
-Node: Basic Arithmetic Functions61522
-Node: Comparison Functions71024
-Node: Special Functions74512
-Node: Input and Output Functions89733
-Node: Formatted Output Functions92764
-Node: Integer and Remainder Related Functions102565
-Node: Rounding Related Functions108859
-Node: Miscellaneous Functions114230
-Node: Exception Related Functions123562
-Node: Compatibility with MPF132016
-Node: Custom Interface134748
-Node: Internals139144
-Node: API Compatibility140684
-Node: Type and Macro Changes142614
-Node: Added Functions145695
-Node: Changed Functions149584
-Node: Removed Functions155314
-Node: Other Changes155852
-Node: Contributors157455
-Node: References160490
-Node: GNU Free Documentation License162244
-Node: Concept Index184833
-Node: Function and Type Index191237
+Node: Installing MPFR5888
+Node: Reporting Bugs11332
+Node: MPFR Basics13362
+Node: Headers and Libraries13678
+Node: Nomenclature and Types16856
+Node: MPFR Variable Conventions19099
+Node: Rounding Modes20641
+Ref: ternary value21767
+Node: Floating-Point Values on Special Numbers23749
+Node: Exceptions27009
+Node: Memory Handling30837
+Node: MPFR Interface32872
+Node: Initialization Functions35000
+Node: Assignment Functions42315
+Node: Combined Initialization and Assignment Functions52083
+Node: Conversion Functions53384
+Node: Basic Arithmetic Functions62824
+Node: Comparison Functions72326
+Node: Special Functions75814
+Node: Input and Output Functions91035
+Node: Formatted Output Functions94066
+Node: Integer and Remainder Related Functions103867
+Node: Rounding Related Functions111401
+Node: Miscellaneous Functions116963
+Node: Exception Related Functions126295
+Node: Compatibility with MPF134749
+Node: Custom Interface137491
+Node: Internals141890
+Node: API Compatibility143430
+Node: Type and Macro Changes145360
+Node: Added Functions148441
+Node: Changed Functions152402
+Node: Removed Functions158132
+Node: Other Changes158670
+Node: Contributors160273
+Node: References163308
+Node: GNU Free Documentation License165062
+Node: Concept Index187651
+Node: Function and Type Index194055
 
 End Tag Table
 
