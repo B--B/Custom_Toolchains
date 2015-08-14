@@ -34,7 +34,7 @@ extern "C"
 
 #define CLOOG_VERSION_MAJOR 0
 #define CLOOG_VERSION_MINOR 18
-#define CLOOG_VERSION_REVISION 3
+#define CLOOG_VERSION_REVISION 4
 
 const char *cloog_version(void);
 
