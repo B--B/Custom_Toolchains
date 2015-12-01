@@ -2,7 +2,7 @@
 
     It has been auto-edited by fixincludes from:
 
-	"/home/b--b/CM-Sources/UBER/out/arm-linux-androideabi-4.9-cortex-a15/arch-arm/usr/include/linux/a.out.h"
+	"/home/b--b/Android-Sources/UBER/out/arm-linux-androideabi-4.9-cortex-a15/arch-arm/usr/include/linux/a.out.h"
 
     This had to be done to correct non-standard usages in the
     original, manufacturer supplied header file.  */
