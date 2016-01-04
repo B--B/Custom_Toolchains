@@ -1,1 +1,1 @@
-/home/b--b/x-tools/arm-cortex_a15-linux-gnueabihf/arm-cortex_a15-linux-gnueabihf/sysroot/usr/include/curses.h
+curses.h
