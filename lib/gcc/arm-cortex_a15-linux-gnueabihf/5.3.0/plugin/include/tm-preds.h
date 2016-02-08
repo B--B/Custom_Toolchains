@@ -1,5 +1,5 @@
 /* Generated automatically by the program 'build/genpreds'
-   from the machine description file '/home/b--b/Android-Sources/Linaro/.build/src/gcc-5.3.0/gcc/config/arm/arm.md'.  */
+   from the machine description file '/home/b--b/Android-Sources/MY-GCC/.build/src/gcc-5.3.0/gcc/config/arm/arm.md'.  */
 
 #ifndef GCC_TM_PREDS_H
 #define GCC_TM_PREDS_H
