@@ -733,7 +733,7 @@ namespace std
 #define _GLIBCXX_HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the `isinf' function. */
-#define _GLIBCXX_HAVE_ISINF 1
+/* #undef _GLIBCXX_HAVE_ISINF */
 
 /* Define to 1 if you have the `isinff' function. */
 #define _GLIBCXX_HAVE_ISINFF 1
@@ -742,7 +742,7 @@ namespace std
 #define _GLIBCXX_HAVE_ISINFL 1
 
 /* Define to 1 if you have the `isnan' function. */
-#define _GLIBCXX_HAVE_ISNAN 1
+/* #undef _GLIBCXX_HAVE_ISNAN */
 
 /* Define to 1 if you have the `isnanf' function. */
 #define _GLIBCXX_HAVE_ISNANF 1

@@ -17,6 +17,62 @@
 
 #include <linux/types.h>
 
+struct nvme_bar {
+	__u64			cap;	/* Controller Capabilities */
+	__u32			vs;	/* Version */
+	__u32			intms;	/* Interrupt Mask Set */
+	__u32			intmc;	/* Interrupt Mask Clear */
+	__u32			cc;	/* Controller Configuration */
+	__u32			rsvd1;	/* Reserved */
+	__u32			csts;	/* Controller Status */
+	__u32			nssr;	/* Subsystem Reset */
+	__u32			aqa;	/* Admin Queue Attributes */
+	__u64			asq;	/* Admin SQ Base Address */
+	__u64			acq;	/* Admin CQ Base Address */
+	__u32			cmbloc; /* Controller Memory Buffer Location */
+	__u32			cmbsz;  /* Controller Memory Buffer Size */
+};
+
+#define NVME_CAP_MQES(cap)	((cap) & 0xffff)
+#define NVME_CAP_TIMEOUT(cap)	(((cap) >> 24) & 0xff)
+#define NVME_CAP_STRIDE(cap)	(((cap) >> 32) & 0xf)
+#define NVME_CAP_NSSRC(cap)	(((cap) >> 36) & 0x1)
+#define NVME_CAP_MPSMIN(cap)	(((cap) >> 48) & 0xf)
+#define NVME_CAP_MPSMAX(cap)	(((cap) >> 52) & 0xf)
+
+#define NVME_CMB_BIR(cmbloc)	((cmbloc) & 0x7)
+#define NVME_CMB_OFST(cmbloc)	(((cmbloc) >> 12) & 0xfffff)
+#define NVME_CMB_SZ(cmbsz)	(((cmbsz) >> 12) & 0xfffff)
+#define NVME_CMB_SZU(cmbsz)	(((cmbsz) >> 8) & 0xf)
+
+#define NVME_CMB_WDS(cmbsz)	((cmbsz) & 0x10)
+#define NVME_CMB_RDS(cmbsz)	((cmbsz) & 0x8)
+#define NVME_CMB_LISTS(cmbsz)	((cmbsz) & 0x4)
+#define NVME_CMB_CQS(cmbsz)	((cmbsz) & 0x2)
+#define NVME_CMB_SQS(cmbsz)	((cmbsz) & 0x1)
+
+enum {
+	NVME_CC_ENABLE		= 1 << 0,
+	NVME_CC_CSS_NVM		= 0 << 4,
+	NVME_CC_MPS_SHIFT	= 7,
+	NVME_CC_ARB_RR		= 0 << 11,
+	NVME_CC_ARB_WRRU	= 1 << 11,
+	NVME_CC_ARB_VS		= 7 << 11,
+	NVME_CC_SHN_NONE	= 0 << 14,
+	NVME_CC_SHN_NORMAL	= 1 << 14,
+	NVME_CC_SHN_ABRUPT	= 2 << 14,
+	NVME_CC_SHN_MASK	= 3 << 14,
+	NVME_CC_IOSQES		= 6 << 16,
+	NVME_CC_IOCQES		= 4 << 20,
+	NVME_CSTS_RDY		= 1 << 0,
+	NVME_CSTS_CFS		= 1 << 1,
+	NVME_CSTS_NSSRO		= 1 << 4,
+	NVME_CSTS_SHST_NORMAL	= 0 << 2,
+	NVME_CSTS_SHST_OCCUR	= 1 << 2,
+	NVME_CSTS_SHST_CMPLT	= 2 << 2,
+	NVME_CSTS_SHST_MASK	= 3 << 2,
+};
+
 struct nvme_id_power_state {
 	__le16			max_power;	/* centiwatts */
 	__u8			rsvd2;
@@ -50,8 +106,8 @@ struct nvme_id_ctrl {
 	__u8			ieee[3];
 	__u8			mic;
 	__u8			mdts;
-	__u16			cntlid;
-	__u32			ver;
+	__le16			cntlid;
+	__le32			ver;
 	__u8			rsvd84[172];
 	__le16			oacs;
 	__u8			acl;
@@ -539,51 +595,6 @@ struct nvme_completion {
 	__le16	status;		/* did the command fail, and if so, why? */
 };
 
-struct nvme_user_io {
-	__u8	opcode;
-	__u8	flags;
-	__u16	control;
-	__u16	nblocks;
-	__u16	rsvd;
-	__u64	metadata;
-	__u64	addr;
-	__u64	slba;
-	__u32	dsmgmt;
-	__u32	reftag;
-	__u16	apptag;
-	__u16	appmask;
-};
-
-struct nvme_passthru_cmd {
-	__u8	opcode;
-	__u8	flags;
-	__u16	rsvd1;
-	__u32	nsid;
-	__u32	cdw2;
-	__u32	cdw3;
-	__u64	metadata;
-	__u64	addr;
-	__u32	metadata_len;
-	__u32	data_len;
-	__u32	cdw10;
-	__u32	cdw11;
-	__u32	cdw12;
-	__u32	cdw13;
-	__u32	cdw14;
-	__u32	cdw15;
-	__u32	timeout_ms;
-	__u32	result;
-};
-
 #define NVME_VS(major, minor) (((major) << 16) | ((minor) << 8))
-
-#define nvme_admin_cmd nvme_passthru_cmd
-
-#define NVME_IOCTL_ID		_IO('N', 0x40)
-#define NVME_IOCTL_ADMIN_CMD	_IOWR('N', 0x41, struct nvme_admin_cmd)
-#define NVME_IOCTL_SUBMIT_IO	_IOW('N', 0x42, struct nvme_user_io)
-#define NVME_IOCTL_IO_CMD	_IOWR('N', 0x43, struct nvme_passthru_cmd)
-#define NVME_IOCTL_RESET	_IO('N', 0x44)
-#define NVME_IOCTL_SUBSYS_RESET	_IO('N', 0x45)
 
 #endif /* _LINUX_NVME_H */

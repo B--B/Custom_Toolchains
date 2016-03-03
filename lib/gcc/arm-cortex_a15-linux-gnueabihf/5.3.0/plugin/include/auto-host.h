@@ -1988,7 +1988,7 @@
 
 /* GNU C Library minor version number used on the target, or 0. */
 #ifndef USED_FOR_TARGET
-#define TARGET_GLIBC_MINOR 22
+#define TARGET_GLIBC_MINOR 23
 #endif
 
 
