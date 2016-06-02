@@ -17,7 +17,7 @@ old_library='libbfd.a'
 inherited_linker_flags=''
 
 # Libraries that this one depends upon.
-dependency_libs=' -L/home/b--b/SOURCES/ct-ng/a15-krait-TC/.build/arm-cortex_a15-linux-gnueabihf/build/build-gdb-native/zlib -lz -ldl'
+dependency_libs=' -L/home/b--b/SOURCES/Linaro/.build/arm-cortex_a15-linux-gnueabihf/build/build-gdb-native/zlib -lz -ldl'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''
