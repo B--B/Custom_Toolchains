@@ -1,4 +1,4 @@
-This is ld.info, produced by makeinfo version 6.0 from ld.texinfo.
+This is ld.info, produced by makeinfo version 6.1 from ld.texinfo.
 
 This file documents the GNU linker LD (JDCTeam-LINARO-4.9.4) version
 2.25.51.
@@ -244,7 +244,7 @@ GNU linker:
 '--mri-script=MRI-COMMANDFILE'
      For compatibility with linkers produced by MRI, 'ld' accepts script
      files written in an alternate, restricted command language,
-     described in *note MRI Compatible Script Files: MRI.  Introduce MRI
+     described in *note MRI Compatible Script Files: MRI. Introduce MRI
      script files with the option '-c'; use the '-T' option to run
      linker scripts written in the general-purpose 'ld' scripting
      language.  If MRI-CMDFILE does not exist, 'ld' looks for it in the
@@ -1209,7 +1209,7 @@ GNU linker:
      supported on a few targets.  *Note 'ld' and the H8/300: H8/300.
      *Note 'ld' and the Intel 960 family: i960.  *Note 'ld' and Xtensa
      Processors: Xtensa.  *Note 'ld' and the 68HC11 and 68HC12:
-     M68HC11/68HC12.  *Note 'ld' and the Altera Nios II: Nios II.  *Note
+     M68HC11/68HC12.  *Note 'ld' and the Altera Nios II: Nios II. *Note
      'ld' and PowerPC 32-bit ELF Support: PowerPC ELF32.
 
      On some platforms the '--relax' option performs target specific,
@@ -7466,10 +7466,10 @@ LD Index
 * --push-state:                          Options.            (line  471)
 * --reduce-memory-overheads:             Options.            (line 1561)
 * --relax:                               Options.            (line 1120)
-* '--relax' on i960:                     i960.               (line   32)
+* --relax on i960:                       i960.               (line   32)
 * --relax on Nios II:                    Nios II.            (line    6)
 * --relax on PowerPC:                    PowerPC ELF32.      (line    6)
-* '--relax' on Xtensa:                   Xtensa.             (line   27)
+* --relax on Xtensa:                     Xtensa.             (line   27)
 * --relocatable:                         Options.            (line  505)
 * --retain-symbols-file=FILENAME:        Options.            (line 1146)
 * --script=SCRIPT:                       Options.            (line  547)
@@ -7611,15 +7611,15 @@ LD Index
                                                              (line    6)
 * [COMMON]:                              Input Section Common.
                                                              (line   29)
-* 'ABSOLUTE' (MRI):                      MRI.                (line   32)
+* ABSOLUTE (MRI):                        MRI.                (line   32)
 * absolute and relocatable symbols:      Expression Section. (line    6)
 * absolute expressions:                  Expression Section. (line    6)
 * ABSOLUTE(EXP):                         Builtin Functions.  (line   10)
 * ADDR(SECTION):                         Builtin Functions.  (line   17)
 * address, section:                      Output Section Address.
                                                              (line    6)
-* 'ALIAS' (MRI):                         MRI.                (line   43)
-* 'ALIGN' (MRI):                         MRI.                (line   49)
+* ALIAS (MRI):                           MRI.                (line   43)
+* ALIGN (MRI):                           MRI.                (line   49)
 * align expression:                      Builtin Functions.  (line   38)
 * align location counter:                Builtin Functions.  (line   38)
 * ALIGN(ALIGN):                          Builtin Functions.  (line   38)
@@ -7648,7 +7648,7 @@ LD Index
 * AT>LMA_REGION:                         Output Section LMA. (line    6)
 * automatic data imports:                WIN32.              (line  185)
 * back end:                              BFD.                (line    6)
-* 'BASE' (MRI):                          MRI.                (line   53)
+* BASE (MRI):                            MRI.                (line   53)
 * BE8:                                   ARM.                (line   28)
 * BFD canonical format:                  Canonical format.   (line   11)
 * BFD requirements:                      BFD.                (line   16)
@@ -7657,12 +7657,12 @@ LD Index
 * BLOCK(EXP):                            Builtin Functions.  (line   76)
 * bug criteria:                          Bug Criteria.       (line    6)
 * bug reports:                           Bug Reporting.      (line    6)
-* bugs in 'ld':                          Reporting Bugs.     (line    6)
+* bugs in ld:                            Reporting Bugs.     (line    6)
 * BYTE(EXPRESSION):                      Output Section Data.
                                                              (line    6)
 * C++ constructors, arranging in link:   Output Section Keywords.
                                                              (line   19)
-* 'CHIP' (MRI):                          MRI.                (line   57)
+* CHIP (MRI):                            MRI.                (line   57)
 * COLLECT_NO_DEMANGLE:                   Environment.        (line   29)
 * combining symbols, warnings on:        Options.            (line 1372)
 * command files:                         Scripts.            (line    6)
@@ -7726,7 +7726,7 @@ LD Index
 * ELF program headers:                   PHDRS.              (line    6)
 * emulation:                             Options.            (line  390)
 * emulation, default:                    Environment.        (line   21)
-* 'END' (MRI):                           MRI.                (line   61)
+* END (MRI):                             MRI.                (line   61)
 * endianness:                            Options.            (line  247)
 * entry point:                           Entry Point.        (line    6)
 * entry point, from command line:        Options.            (line  186)
@@ -7763,7 +7763,7 @@ LD Index
 * forcing output section alignment:      Forced Output Alignment.
                                                              (line    6)
 * forcing the creation of dynamic sections: Options.         (line  501)
-* 'FORMAT' (MRI):                        MRI.                (line   65)
+* FORMAT (MRI):                          MRI.                (line   65)
 * functions in expressions:              Builtin Functions.  (line    6)
 * garbage collection:                    Options.            (line  953)
 * garbage collection <1>:                Options.            (line  975)
@@ -7825,7 +7825,7 @@ LD Index
 * KEEP:                                  Input Section Keep. (line    6)
 * l =:                                   MEMORY.             (line   68)
 * lazy evaluation:                       Evaluation.         (line    6)
-* 'ld' bugs, reporting:                  Bug Reporting.      (line    6)
+* ld bugs, reporting:                    Bug Reporting.      (line    6)
 * ldata segment origin, cmd line:        Options.            (line 1321)
 * LDEMULATION:                           Environment.        (line   21)
 * LD_FEATURE(STRING):                    Miscellaneous Commands.
@@ -7845,9 +7845,9 @@ LD Index
 * linker script input object files:      File Commands.      (line   19)
 * linker script simple commands:         Simple Commands.    (line    6)
 * linker scripts:                        Scripts.            (line    6)
-* 'LIST' (MRI):                          MRI.                (line   76)
+* LIST (MRI):                            MRI.                (line   76)
 * little-endian objects:                 Options.            (line  250)
-* 'LOAD' (MRI):                          MRI.                (line   83)
+* LOAD (MRI):                            MRI.                (line   83)
 * load address:                          Output Section LMA. (line    6)
 * LOADADDR(SECTION):                     Builtin Functions.  (line  141)
 * loading, preventing:                   Output Section Type.
@@ -7877,7 +7877,7 @@ LD Index
 * Motorola 68K GOT generation:           M68K.               (line    6)
 * MRI compatibility:                     MRI.                (line    6)
 * MSP430 extra sections:                 MSP430.             (line   11)
-* 'NAME' (MRI):                          MRI.                (line   89)
+* NAME (MRI):                            MRI.                (line   89)
 * name, section:                         Output Section Name.
                                                              (line    6)
 * names:                                 Symbols.            (line    6)
@@ -7907,7 +7907,7 @@ LD Index
 * opening object files:                  BFD outline.        (line    6)
 * operators for arithmetic:              Operators.          (line    6)
 * options:                               Options.            (line    6)
-* 'ORDER' (MRI):                         MRI.                (line   94)
+* ORDER (MRI):                           MRI.                (line   94)
 * org =:                                 MEMORY.             (line   63)
 * ORIGIN =:                              MEMORY.             (line   63)
 * ORIGIN(MEMORY):                        Builtin Functions.  (line  161)
@@ -7966,7 +7966,7 @@ LD Index
 * program segments:                      PHDRS.              (line    6)
 * PROVIDE:                               PROVIDE.            (line    6)
 * PROVIDE_HIDDEN:                        PROVIDE_HIDDEN.     (line    6)
-* 'PUBLIC' (MRI):                        MRI.                (line  102)
+* PUBLIC (MRI):                          MRI.                (line  102)
 * push state governing input file handling: Options.         (line  471)
 * QUAD(EXPRESSION):                      Output Section Data.
                                                              (line    6)
@@ -7988,7 +7988,7 @@ LD Index
 * relocatable output:                    Options.            (line  505)
 * removing sections:                     Output Section Discarding.
                                                              (line    6)
-* reporting bugs in 'ld':                Reporting Bugs.     (line    6)
+* reporting bugs in ld:                  Reporting Bugs.     (line    6)
 * requirements for BFD:                  BFD.                (line   16)
 * retain relocations in final executable: Options.           (line  492)
 * retaining specified symbols:           Options.            (line 1146)
@@ -8008,7 +8008,7 @@ LD Index
 * search directory, from cmd line:       Options.            (line  365)
 * search path in linker script:          File Commands.      (line   76)
 * SEARCH_DIR(PATH):                      File Commands.      (line   76)
-* 'SECT' (MRI):                          MRI.                (line  108)
+* SECT (MRI):                            MRI.                (line  108)
 * section address:                       Output Section Address.
                                                              (line    6)
 * section address in expression:         Builtin Functions.  (line   17)
@@ -8133,87 +8133,87 @@ Node: Top717
 Node: Overview1509
 Node: Invocation2625
 Node: Options3033
-Node: Environment99566
-Node: Scripts101327
-Node: Basic Script Concepts103061
-Node: Script Format105769
-Node: Simple Example106632
-Node: Simple Commands109726
-Node: Entry Point110231
-Node: File Commands111159
-Node: Format Commands115280
-Node: REGION_ALIAS117236
-Node: Miscellaneous Commands122063
-Node: Assignments125671
-Node: Simple Assignments126182
-Node: HIDDEN127913
-Node: PROVIDE128540
-Node: PROVIDE_HIDDEN129733
-Node: Source Code Reference129977
-Node: SECTIONS133559
-Node: Output Section Description135447
-Node: Output Section Name136688
-Node: Output Section Address137565
-Node: Input Section139798
-Node: Input Section Basics140599
-Node: Input Section Wildcards144498
-Node: Input Section Common149699
-Node: Input Section Keep151181
-Node: Input Section Example151671
-Node: Output Section Data152639
-Node: Output Section Keywords155418
-Node: Output Section Discarding158985
-Node: Output Section Attributes160475
-Node: Output Section Type161575
-Node: Output Section LMA162645
-Node: Forced Output Alignment165716
-Node: Forced Input Alignment166145
-Node: Output Section Constraint166533
-Node: Output Section Region166961
-Node: Output Section Phdr167394
-Node: Output Section Fill168058
-Node: Overlay Description169200
-Node: MEMORY173645
-Node: PHDRS177973
-Node: VERSION183227
-Node: Expressions191318
-Node: Constants192247
-Node: Symbolic Constants193121
-Node: Symbols193672
-Node: Orphan Sections194419
-Node: Location Counter195584
-Node: Operators200018
-Node: Evaluation200940
-Node: Expression Section202304
-Node: Builtin Functions206159
-Node: Implicit Linker Scripts214346
-Node: Machine Dependent215121
-Node: H8/300216228
-Node: i960218291
-Node: M68HC11/68HC12219987
-Node: ARM221432
-Node: HPPA ELF32230476
-Node: M68K232099
-Node: MIPS233008
-Node: MMIX233532
-Node: MSP430234697
-Node: NDS32235737
-Node: Nios II236703
-Node: PowerPC ELF32238019
-Node: PowerPC64 ELF64240850
-Node: SPU ELF247004
-Node: TI COFF249638
-Node: WIN32250164
-Node: Xtensa270293
-Node: BFD273259
-Node: BFD outline274717
-Node: BFD information loss276005
-Node: Canonical format278531
-Node: Reporting Bugs282893
-Node: Bug Criteria283587
-Node: Bug Reporting284286
-Node: MRI291324
-Node: GNU Free Documentation License295966
-Node: LD Index321103
+Node: Environment99564
+Node: Scripts101325
+Node: Basic Script Concepts103059
+Node: Script Format105767
+Node: Simple Example106630
+Node: Simple Commands109724
+Node: Entry Point110229
+Node: File Commands111157
+Node: Format Commands115278
+Node: REGION_ALIAS117234
+Node: Miscellaneous Commands122061
+Node: Assignments125669
+Node: Simple Assignments126180
+Node: HIDDEN127911
+Node: PROVIDE128538
+Node: PROVIDE_HIDDEN129731
+Node: Source Code Reference129975
+Node: SECTIONS133557
+Node: Output Section Description135445
+Node: Output Section Name136686
+Node: Output Section Address137563
+Node: Input Section139796
+Node: Input Section Basics140597
+Node: Input Section Wildcards144496
+Node: Input Section Common149697
+Node: Input Section Keep151179
+Node: Input Section Example151669
+Node: Output Section Data152637
+Node: Output Section Keywords155416
+Node: Output Section Discarding158983
+Node: Output Section Attributes160473
+Node: Output Section Type161573
+Node: Output Section LMA162643
+Node: Forced Output Alignment165714
+Node: Forced Input Alignment166143
+Node: Output Section Constraint166531
+Node: Output Section Region166959
+Node: Output Section Phdr167392
+Node: Output Section Fill168056
+Node: Overlay Description169198
+Node: MEMORY173643
+Node: PHDRS177971
+Node: VERSION183225
+Node: Expressions191316
+Node: Constants192245
+Node: Symbolic Constants193119
+Node: Symbols193670
+Node: Orphan Sections194417
+Node: Location Counter195582
+Node: Operators200016
+Node: Evaluation200938
+Node: Expression Section202302
+Node: Builtin Functions206157
+Node: Implicit Linker Scripts214344
+Node: Machine Dependent215119
+Node: H8/300216226
+Node: i960218289
+Node: M68HC11/68HC12219985
+Node: ARM221430
+Node: HPPA ELF32230474
+Node: M68K232097
+Node: MIPS233006
+Node: MMIX233530
+Node: MSP430234695
+Node: NDS32235735
+Node: Nios II236701
+Node: PowerPC ELF32238017
+Node: PowerPC64 ELF64240848
+Node: SPU ELF247002
+Node: TI COFF249636
+Node: WIN32250162
+Node: Xtensa270291
+Node: BFD273257
+Node: BFD outline274715
+Node: BFD information loss276003
+Node: Canonical format278529
+Node: Reporting Bugs282891
+Node: Bug Criteria283585
+Node: Bug Reporting284284
+Node: MRI291322
+Node: GNU Free Documentation License295964
+Node: LD Index321101
 
 End Tag Table
