@@ -140,7 +140,7 @@
 
 /* Define to 1 to enable libquadmath support */
 #ifndef USED_FOR_TARGET
-/* #undef ENABLE_LIBQUADMATH_SUPPORT */
+#define ENABLE_LIBQUADMATH_SUPPORT 1
 #endif
 
 
