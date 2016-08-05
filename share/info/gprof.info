@@ -27,7 +27,7 @@ to determine which parts of a program are taking most of the execution
 time.  We assume that you know how to write, compile, and execute
 programs.  GNU 'gprof' was written by Jay Fenlason.
 
-   This manual is for 'gprof' (JDCTeam-UBER-Linaro-4.9.3) version
+   This manual is for 'gprof' (B-B-JDCTeam-UBER-Linaro-4.9.3) version
 2.25.51.
 
    This document is distributed under the terms of the GNU Free
@@ -2426,34 +2426,34 @@ their use in free software.
 
 Tag Table:
 Node: Top719
-Node: Introduction2058
-Node: Compiling4549
-Node: Executing8605
-Node: Invoking11393
-Node: Output Options12808
-Node: Analysis Options19900
-Node: Miscellaneous Options23820
-Node: Deprecated Options25074
-Node: Symspecs27137
-Node: Output28963
-Node: Flat Profile30003
-Node: Call Graph34956
-Node: Primary38188
-Node: Callers40776
-Node: Subroutines42894
-Node: Cycles44735
-Node: Line-by-line51512
-Node: Annotated Source55588
-Node: Inaccuracy58586
-Node: Sampling Error58844
-Node: Assumptions61748
-Node: How do I?63218
-Node: Incompatibilities64775
-Node: Details66269
-Node: Implementation66662
-Node: File Format72561
-Node: Internals76849
-Node: Debugging85339
-Node: GNU Free Documentation License86929
+Node: Introduction2062
+Node: Compiling4553
+Node: Executing8609
+Node: Invoking11397
+Node: Output Options12812
+Node: Analysis Options19904
+Node: Miscellaneous Options23824
+Node: Deprecated Options25078
+Node: Symspecs27141
+Node: Output28967
+Node: Flat Profile30007
+Node: Call Graph34960
+Node: Primary38192
+Node: Callers40780
+Node: Subroutines42898
+Node: Cycles44739
+Node: Line-by-line51516
+Node: Annotated Source55592
+Node: Inaccuracy58590
+Node: Sampling Error58848
+Node: Assumptions61752
+Node: How do I?63222
+Node: Incompatibilities64779
+Node: Details66273
+Node: Implementation66666
+Node: File Format72565
+Node: Internals76853
+Node: Debugging85343
+Node: GNU Free Documentation License86933
 
 End Tag Table

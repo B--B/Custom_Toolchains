@@ -43,7 +43,7 @@ Introduction
 ************
 
 This brief manual contains documentation for the GNU binary utilities
-(JDCTeam-UBER-Linaro-4.9.3) version 2.25.51:
+(B-B-JDCTeam-UBER-Linaro-4.9.3) version 2.25.51:
 
    This document is distributed under the terms of the GNU Free
 Documentation License version 1.3.  A copy of the license is included in
@@ -4880,34 +4880,34 @@ Binutils Index
 
 Tag Table:
 Node: Top1893
-Node: ar3619
-Node: ar cmdline6841
-Node: ar scripts17174
-Node: nm22860
-Node: objcopy32680
-Node: objdump64890
-Node: ranlib87085
-Node: size88684
-Node: strings91660
-Node: strip95707
-Node: c++filt102855
-Ref: c++filt-Footnote-1107669
-Node: addr2line107775
-Node: nlmconv112304
-Node: windmc114883
-Node: windres118540
-Node: dlltool124899
-Node: def file format137669
-Node: readelf140199
-Node: elfedit147644
-Node: Common Options149878
-Node: Selecting the Target System150912
-Node: Target Selection151844
-Node: Architecture Selection153825
-Node: Reporting Bugs154653
-Node: Bug Criteria155432
-Node: Bug Reporting155985
-Node: GNU Free Documentation License162855
-Node: Binutils Index188015
+Node: ar3623
+Node: ar cmdline6845
+Node: ar scripts17178
+Node: nm22864
+Node: objcopy32684
+Node: objdump64894
+Node: ranlib87089
+Node: size88688
+Node: strings91664
+Node: strip95711
+Node: c++filt102859
+Ref: c++filt-Footnote-1107673
+Node: addr2line107779
+Node: nlmconv112308
+Node: windmc114887
+Node: windres118544
+Node: dlltool124903
+Node: def file format137673
+Node: readelf140203
+Node: elfedit147648
+Node: Common Options149882
+Node: Selecting the Target System150916
+Node: Target Selection151848
+Node: Architecture Selection153829
+Node: Reporting Bugs154657
+Node: Bug Criteria155436
+Node: Bug Reporting155989
+Node: GNU Free Documentation License162859
+Node: Binutils Index188019
 
 End Tag Table
