@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PKGVERSION="(crosstool-NG crosstool-ng-1.22.0-169-g87eb166 - B--B_JDCTeam) "
+PKGVERSION="(crosstool-NG crosstool-ng-1.22.0-217-g1e4040e - B--B-JDCTeam) "
 TZVERSION="2.23"
 REPORT_BUGS_TO="<http://www.gnu.org/software/libc/bugs.html>"
 
