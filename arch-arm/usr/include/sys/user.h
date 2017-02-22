@@ -30,9 +30,12 @@
 #define _SYS_USER_H_
 
 #include <sys/cdefs.h>
-#include <limits.h> /* For PAGE_SIZE. */
+#include <stddef.h> /* For size_t. */
 
 __BEGIN_DECLS
+
+#define PAGE_SIZE 4096
+#define PAGE_MASK (~(PAGE_SIZE - 1))
 
 #if __i386__
 
@@ -46,7 +49,7 @@ struct user_fpregs_struct {
   long fos;
   long st_space[20];
 };
-struct user_fxsr_struct {
+struct user_fpxregs_struct {
   unsigned short cwd;
   unsigned short swd;
   unsigned short twd;
@@ -91,7 +94,7 @@ struct user {
   unsigned long start_stack;
   long int signal;
   int reserved;
-  unsigned long u_ar0;
+  struct user_regs_struct* u_ar0;
   struct user_fpregs_struct* u_fpstate;
   unsigned long magic;
   char u_comm[32];
@@ -108,7 +111,7 @@ struct user_fpregs_struct {
   __u64 rip;
   __u64 rdp;
   __u32 mxcsr;
-  __u32 mxcsr_mask;
+  __u32 mxcr_mask;
   __u32 st_space[32];
   __u32 xmm_space[64];
   __u32 padding[24];
@@ -155,7 +158,7 @@ struct user {
   long int signal;
   int reserved;
   int pad1;
-  unsigned long u_ar0;
+  struct user_regs_struct* u_ar0;
   struct user_fpregs_struct* u_fpstate;
   unsigned long magic;
   char u_comm[32];
@@ -165,10 +168,6 @@ struct user {
 };
 
 #elif defined(__mips__)
-struct user_regs_struct 
-{
-  unsigned long regs[180 / sizeof(unsigned long) + 64];
-};
 
 struct user {
   unsigned long regs[180 / sizeof(unsigned long) + 64];
@@ -179,7 +178,7 @@ struct user {
   unsigned long start_data;
   unsigned long start_stack;
   long int signal;
-  unsigned long u_ar0;
+  void* u_ar0;
   unsigned long magic;
   char u_comm[32];
 };
@@ -233,7 +232,17 @@ struct user {
 
 #elif defined(__aarch64__)
 
-// There are no user structures for 64 bit arm.
+struct user_regs_struct {
+  uint64_t regs[31];
+  uint64_t sp;
+  uint64_t pc;
+  uint64_t pstate;
+};
+struct user_fpsimd_struct {
+  __uint128_t vregs[32];
+  uint32_t fpsr;
+  uint32_t fpcr;
+};
 
 #else
 
