@@ -37,11 +37,6 @@ enum iio_chan_type {
 	IIO_VELOCITY,
 	IIO_CONCENTRATION,
 	IIO_RESISTANCE,
-	IIO_PH,
-	IIO_UVINDEX,
-	IIO_ELECTRICALCONDUCTIVITY,
-	IIO_COUNT,
-	IIO_INDEX,
 };
 
 enum iio_modifier {
@@ -81,7 +76,6 @@ enum iio_modifier {
 	IIO_MOD_Q,
 	IIO_MOD_CO2,
 	IIO_MOD_VOC,
-	IIO_MOD_LIGHT_UV,
 };
 
 enum iio_event_type {
